@@ -1,4 +1,4 @@
-# منجز Pro — GitHub + Vercel
+# منجز — GitHub + Vercel
 
 واجهة منجز تُنشر على Vercel، مع إبقاء Google Sheets قاعدة البيانات وGoogle Apps Script كخدمة خلفية. الواجهة لا تستخدم `google.script.run`؛ بل تستدعي `/api/monjez`، وتقوم وظيفة Vercel باستدعاء Google Apps Script من جهة الخادم.
 
