@@ -1,7 +1,7 @@
 {
-  "name": "منجز Pro",
+  "name": "منجز",
   "short_name": "منجز",
-  "description": "كل يوم أفضل — حسابك الشخصي لإنجاز ما يهم",
+  "description": "منجز — رتّب يومك، واحتفل بتقدّمك",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "/",
