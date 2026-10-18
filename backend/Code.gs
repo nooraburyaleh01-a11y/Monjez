@@ -96,7 +96,7 @@ function completeMonjezProfile(key, accountId, profile, installId) {
     const rowNum = idx + 2, row = rows[idx];
     if (String(row[7] || '') !== accountId) throw new Error('هذا المفتاح مرتبط بحساب آخر.');
     const normalized = { name, birthDate, country: 'Jordan', timezone: 'Asia/Amman', lang: 'ar', dark: false,
-      waterGoal: 8, calorieGoal: 2000, qada: 0, onboardingComplete: true, tutorialDone: false };
+      waterGoal: Math.max(0.5, Math.min(10, Number((profile || {}).waterGoal) || 3)), calorieGoal: Math.max(500, Math.min(10000, Number((profile || {}).calorieGoal) || 2000)), qada: 0, onboardingComplete: true, tutorialDone: false };
     upsertAccount_(accountId, normalized);
     // Migrate legacy cloud state once, then attach the new profile without erasing user data.
     const accountState = readStateByKey_(STATE_PREFIX + accountId);
