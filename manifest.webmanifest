@@ -7,20 +7,10 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0F3D2E",
-  "theme_color": "#0F3D2E",
+  "background_color": "#F4F0E5",
+  "theme_color": "#12392F",
   "icons": [
-    {
-      "src": "/assets/monjez-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/monjez-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    {"src": "/assets/monjez-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/assets/monjez-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
   ]
 }
