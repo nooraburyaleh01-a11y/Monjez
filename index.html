@@ -138,8 +138,63 @@ body.auth-locked .shell{visibility:hidden;pointer-events:none}
 @media(max-width:600px){.auth-gate{padding:12px;align-items:center}.auth-panel{width:min(100%,430px);border-radius:30px;padding-bottom:18px}.auth-brand{min-height:195px;padding:24px 20px 13px;margin-bottom:15px}.auth-mark{width:76px;height:76px;border-radius:23px}.auth-brand h1{font-size:29px}.auth-brand p{font-size:11px}#authActivation,#authProfile{margin:0 10px;padding:22px 17px 17px;border-radius:25px}.auth-panel h2{font-size:21px}.auth-copy{font-size:12px;margin-bottom:17px}.auth-field input,.auth-field select{min-height:52px}.auth-foot{margin-top:13px}}
 .settings-logout{display:flex;align-items:center;gap:12px;margin-top:14px;padding:15px;border:1px solid #efd8d0;border-radius:15px;background:#fff8f5}.settings-logout .logout-copy{flex:1}.settings-logout b{display:block;font-size:13px;color:#9e4d40}.settings-logout small{display:block;font-size:11px;color:#8d7770;margin-top:4px;line-height:1.7}.settings-logout button{border:0;border-radius:11px;background:#b95f53;color:white;font-weight:700;padding:11px 15px;font-size:12px;white-space:nowrap}
 
+
+
+/* Reference-matched activation screen: photographic hero + floating ivory form */
+.auth-gate{position:fixed;inset:0;z-index:100000;padding:0;display:flex;align-items:center;justify-content:center;overflow:auto;background:#e7dfcf url('/assets/auth-hero-interior.png') center/cover no-repeat}
+.auth-gate:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(120deg,#142f2480,#e7d5b540 48%,#fff8e5a6);backdrop-filter:blur(9px)}
+.auth-panel{position:relative;isolation:isolate;display:flex;flex-direction:column;width:min(460px,100%);height:min(960px,calc(100dvh - 44px));min-height:660px;padding:0;overflow:hidden;border-radius:38px;background:#f8f3e8;border:1px solid #fff8e8;box-shadow:0 28px 90px #2c26174d;backdrop-filter:none}
+.auth-panel:before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:57%;border-radius:0;background:linear-gradient(180deg,#f5e8d000 55%,#f5e8d01c 78%,#f8f3e8 100%),url('/assets/auth-hero-interior.png') center 42%/cover no-repeat}
+.auth-panel:after{content:"";position:absolute;z-index:-1;inset:0;border:1px solid #d4b8755c;border-radius:inherit;pointer-events:none}
+.auth-brand{flex:0 0 53%;min-height:330px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;margin:0;padding:28px 26px 42px;text-align:center;background:transparent}
+.auth-mark{display:block;width:118px;height:166px;max-width:42%;object-fit:contain;object-position:center;overflow:visible;border:0;border-radius:0;box-shadow:none;background:transparent}
+.auth-brand-copy{max-width:340px;text-align:center}
+.auth-brand h1{font-size:27px;line-height:1.45;letter-spacing:-.5px;margin:0;color:#12392f;font-weight:700}
+.auth-brand p{font-size:13px;margin:8px 0 0;color:#425d4e}
+#authActivation,#authProfile{position:relative;z-index:1;flex:1 0 auto;margin:-28px 0 0;padding:30px 28px 22px;border-radius:34px 34px 0 0;background:rgba(255,253,248,.97);border:1px solid #f3ead8;box-shadow:0 -7px 28px #55432a0a;backdrop-filter:blur(16px)}
+#authActivation h2,#authProfile h2{font-size:23px;line-height:1.45;text-align:right;margin:0 0 8px;color:#12392f}
+.auth-copy{text-align:right;font-size:13px;line-height:1.9;color:#6c7b70;margin:0 0 22px}
+.auth-field{display:block;margin-bottom:14px}
+.auth-field span{display:block;font-size:12px;font-weight:500;color:#23483a;margin:0 3px 8px}
+.auth-field input,.auth-field select{width:100%;min-height:56px;border:1px solid #e5dece;border-radius:17px;background:#fffdf8;color:#193a31;padding:13px 16px;font-size:14px;box-shadow:inset 0 1px 2px #342a1606}
+.auth-field input::placeholder{color:#a8aaa0}
+.auth-field input:focus,.auth-field select:focus{border-color:#d9ad5b;box-shadow:0 0 0 4px #d9ad5b25;outline:0}
+.auth-submit{width:100%;min-height:60px;border:0;border-radius:18px;background:linear-gradient(105deg,#e2c88f,#d9b86f);color:#17382f;font-size:15px;font-weight:700;margin-top:8px;box-shadow:0 8px 22px #d9ad5b24}
+.auth-submit:hover{background:linear-gradient(105deg,#ead5a8,#dfbd78)}
+.auth-foot{position:relative;z-index:1;margin:0;padding:0 24px 22px;text-align:center;background:#fffdf8;color:#8a9388;font-size:10px;line-height:1.8}
+.auth-error{position:relative;z-index:2;margin:8px 24px 0;font-size:12px;text-align:center;color:#b95f53}
+#authProfile{overflow-y:auto;min-height:0}
+#authProfile .onboard-step h2{text-align:right}
+#authProfile .onboard-step .auth-copy{text-align:right}
+#authProfile .onboard-progress{margin-top:0}
+#authProfile .onboard-symbol{width:46px;height:46px;border-radius:15px;margin-bottom:12px}
+#authProfile .onboard-actions{position:sticky;bottom:-22px;padding:12px 0 4px;background:#fffdf8}
+@media(max-width:600px){
+ .auth-gate{padding:0;background:#f8f3e8}
+ .auth-gate:before{display:none}
+ .auth-panel{width:100%;height:100dvh;min-height:0;max-height:none;border-radius:0;border:0;box-shadow:none}
+ .auth-panel:before{height:56%;background-position:center 42%;}
+ .auth-panel:after{border-radius:0}
+ .auth-brand{flex:0 0 52%;min-height:300px;padding:30px 22px 42px;gap:13px}
+ .auth-mark{width:106px;height:146px;max-width:40%}
+ .auth-brand h1{font-size:25px;line-height:1.42}
+ .auth-brand p{font-size:12px;margin-top:6px}
+ #authActivation,#authProfile{margin:-27px 0 0;padding:28px 26px 20px;border-radius:34px 34px 0 0}
+ #authActivation h2,#authProfile h2{font-size:21px}
+ .auth-copy{font-size:12px;margin-bottom:19px}
+ .auth-field input,.auth-field select{min-height:54px;border-radius:16px}
+ .auth-submit{min-height:58px;border-radius:17px}
+ .auth-foot{padding:0 22px calc(20px + env(safe-area-inset-bottom));}
+}
+@media(max-height:740px) and (max-width:600px){
+ .auth-brand{flex-basis:46%;min-height:260px;gap:8px;padding-top:18px;padding-bottom:36px}
+ .auth-mark{height:112px;width:88px}
+ .auth-brand h1{font-size:22px}
+ #authActivation,#authProfile{padding-top:22px}
+}
+
 </style></head>
-<body class="auth-locked"><div id="loadingScreen" class="loading-screen show" aria-live="polite" aria-hidden="false"><div class="loading-card"><img class="loading-wordmark" src="/assets/monjez-wordmark-transparent.png" alt="شعار منجز"><p class="loading-message">نرتّب يومك، ونقترب من أهدافك</p><div class="loading-track"><i></i></div><div class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></div></div></div><div id="authGate" class="auth-gate"><div class="auth-panel"><div class="auth-brand"><img class="auth-mark" src="/assets/monjez-icon-512.png" alt="شعار منجز"><div><h1>منجز</h1><p>كل يوم أفضل · حسابك الشخصي</p></div></div><div id="authActivation"><h2>أهلًا بك في منجز</h2><p class="auth-copy">أدخل مفتاح التفعيل للمتابعة إلى حسابك. إذا كان المفتاح جديدًا، سنساعدك على إنشاء ملفك الشخصي في خطوة واحدة.</p><form id="activationForm"><label class="auth-field"><span>مفتاح التفعيل</span><input id="activationKey" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="MNJ-XXXX-XXXX-XXXX-XXXX" required></label><button class="auth-submit" id="activationSubmit" type="submit">متابعة</button></form></div><div id="authProfile" hidden><div class="onboard-progress"><i id="onboardProgressBar"></i></div><div class="onboard-step-label" id="onboardStepLabel">الخطوة ١ من ٥</div><form id="profileForm" novalidate>
+<body class="auth-locked"><div id="loadingScreen" class="loading-screen show" aria-live="polite" aria-hidden="false"><div class="loading-card"><img class="loading-wordmark" src="/assets/monjez-wordmark-transparent.png" alt="شعار منجز"><p class="loading-message">نرتّب يومك، ونقترب من أهدافك</p><div class="loading-track"><i></i></div><div class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></div></div></div><div id="authGate" class="auth-gate"><div class="auth-panel"><div class="auth-brand"><img class="auth-mark" src="/assets/monjez-wordmark-transparent.png" alt="شعار منجز"><div class="auth-brand-copy"><h1>رتّب يومك،<br>واقترب من أهدافك</h1><p>حياة أكثر توازنًا · كل يوم</p></div></div><div id="authActivation"><h2>ابدأ يومك بخطوة</h2><p class="auth-copy">أدخل مفتاح التفعيل للمتابعة إلى مساحتك الشخصية.</p><form id="activationForm"><label class="auth-field"><span>مفتاح التفعيل</span><input id="activationKey" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="MNJ-XXXX-XXXX-XXXX-XXXX" required></label><button class="auth-submit" id="activationSubmit" type="submit">متابعة</button></form></div><div id="authProfile" hidden><div class="onboard-progress"><i id="onboardProgressBar"></i></div><div class="onboard-step-label" id="onboardStepLabel">الخطوة ١ من ٥</div><form id="profileForm" novalidate>
 <div class="onboard-step" data-onboard-step="0"><div class="onboard-symbol">✦</div><h2>ما الاسم الذي نناديك به؟</h2><p class="auth-copy">لنبدأ مساحتك الشخصية باسم تحب أن تراه كل يوم.</p><label class="auth-field"><span>اسمك</span><input id="profileFullName" autocomplete="name" maxlength="80" placeholder="اكتب اسمك هنا" required></label></div>
 <div class="onboard-step" data-onboard-step="1" hidden><div class="onboard-symbol">✧</div><h2>متى يوم ميلادك؟</h2><p class="auth-copy">نستخدم التاريخ لإكمال ملفك الشخصي فقط.</p><label class="auth-field"><span>تاريخ الميلاد</span><input id="profileBirthDate" type="date" autocomplete="bday" required></label></div>
 <div class="onboard-step" data-onboard-step="2" hidden><div class="onboard-symbol">⌖</div><h2>أين تقيم؟</h2><p class="auth-copy">نضبط اليوم والوقت وفق المنطقة الزمنية المناسبة لك.</p><label class="auth-field"><span>الدولة</span><select id="profileCountry"><option value="Jordan" selected>الأردن</option></select></label><div class="auth-country-note">المنطقة الزمنية: عمّان · Asia/Amman</div></div>
