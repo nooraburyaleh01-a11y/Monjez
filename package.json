@@ -1,12 +1,8 @@
 {
-  "name": "monjez",
+  "name": "monjez-pro",
   "version": "1.0.0",
   "private": true,
-  "description": "منجز — Arabic productivity app hosted on Vercel with Google Sheets storage",
-  "engines": {
-    "node": ">=18"
-  },
-  "scripts": {
-    "check": "node --check api/monjez.js"
-  }
+  "description": "منجز Pro - Arabic productivity app hosted on Vercel with Google Sheets storage",
+  "engines": { "node": ">=18" },
+  "scripts": { "check": "node --check api/monjez.js" }
 }
