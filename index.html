@@ -301,8 +301,9 @@ body.auth-locked .shell{visibility:hidden;pointer-events:none}
 <div class="calendar-toolbar"><button class="btn-secondary" id="calendarPrev" aria-label="الشهر السابق">‹</button><strong id="calendarMonth">الشهر</strong><button class="btn-secondary" id="calendarNext" aria-label="الشهر التالي">›</button><button class="linkbtn" id="calendarToday">اليوم</button></div>
 <div class="calendar-weekdays"><span>اثن</span><span>ثلا</span><span>أرب</span><span>خمي</span><span>جمع</span><span>سبت</span><span>أحد</span></div>
 <div class="calendar-grid" id="calendarGrid"></div>
+<div class="calendar-move-hint" id="calendarMoveHint" hidden></div>
 </div>
-<div class="section-head"><div><h2 id="calendarSelectedTitle">مهام اليوم</h2><p>اضغط على أي تاريخ لعرض مهامه.</p></div><span class="muted" id="calendarTaskCount">0 مهام</span></div>
+<div class="section-head"><div><h2 id="calendarSelectedTitle">مهام اليوم</h2><p>اسحب مقبض المهمة إلى تاريخ آخر، أو اضغط «نقل» ثم اختر اليوم.</p></div><span class="muted" id="calendarTaskCount">0 مهام</span></div>
 <div class="card"><div class="tasks" id="calendarTasks"></div></div>
 </section>
 <section class="view" id="view-focus">
@@ -379,6 +380,24 @@ function renderLifeHub(){
  $('#lifeQuran').textContent=+d.quran||0;$('#lifeDhikr').textContent=`${(d.dhikr||[]).filter(x=>x==='morning'||x==='evening').length}/2`;$('#lifeSupplements').textContent=(d.supplements||[]).length;
  $('#lifeWeek').innerHTML=Array.from({length:7},(_,i)=>{const day=dateOffset(6-i),l=state.daily[day]||{},count=(l.tasks||[]).length+(l.habits||[]).length+(l.prayers||[]).length,dt=new Date(day+'T12:00:00');return `<div class="life-day"><small>${dt.toLocaleDateString('ar-JO',{weekday:'short'})}</small><b>${dt.getDate()}</b><i style="opacity:${count?Math.min(1,.25+count*.15):.12}"></i><small>${count} نشاط</small></div>`}).join('');
 }
+let calendarMoveTaskId=null,calendarPointerDrag=null;
+function calendarTaskMarkup(t){
+ const done=isTaskDone(t);
+ return `<div class="calendar-task ${done?'is-done':''}" data-calendar-task="${esc(t.id)}">
+  <button class="calendar-drag-handle" type="button" data-calendar-drag="${esc(t.id)}" aria-label="اسحب لنقل المهمة" title="اسحب لنقل المهمة">⠿</button>
+  <button class="calendar-task-check" type="button" data-task-toggle="${esc(t.id)}" aria-label="تبديل حالة المهمة">${done?'✓':''}</button>
+  <div class="calendar-task-copy"><b>${esc(t.name)}</b><small>${done?'مكتملة':t.priority==='high'?'أولوية عالية':t.priority==='low'?'أولوية منخفضة':'متوسطة'}${t.project?' · '+esc((state.projects.find(p=>p.id===t.project)||{}).name||'مشروع'):''}</small></div>
+  <button class="calendar-move-button ${calendarMoveTaskId===t.id?'selected':''}" type="button" data-calendar-move="${esc(t.id)}">${calendarMoveTaskId===t.id?'اختر يومًا':'نقل'}</button>
+ </div>`;
+}
+function moveCalendarTask(taskId,newDate){
+ const task=state.tasks.find(t=>t.id===taskId);if(!task||!newDate)return false;
+ if(task.due===newDate){calendarMoveTaskId=null;renderCalendar();return false}
+ const oldDate=task.due||'';task.due=newDate;calendarSelected=newDate;calendarMonthDate=new Date(newDate+'T12:00:00');calendarMoveTaskId=null;
+ save();renderCalendar();renderTasks();renderLifeHub();
+ toast(`تم نقل «${task.name}» إلى ${dateLabel(newDate)}`);return true;
+}
+function calendarDropTargetAt(x,y){const el=document.elementFromPoint(x,y);return el&&el.closest('[data-calendar-date]');}
 function renderCalendar(){
  const y=calendarMonthDate.getFullYear(),m=calendarMonthDate.getMonth();
  $('#calendarMonth').textContent=calendarMonthDate.toLocaleDateString('ar-JO',{month:'long',year:'numeric'});
@@ -394,7 +413,10 @@ function renderCalendar(){
  $('#calendarSelectedTitle').textContent=dateLabel(calendarSelected);
  const tasks=state.tasks.filter(t=>t.due===calendarSelected);
  $('#calendarTaskCount').textContent=`${tasks.length} مهام`;
- $('#calendarTasks').innerHTML=tasks.length?tasks.map(taskMarkup).join(''):'<div class="empty">لا توجد مهام في هذا اليوم. يمكنك إضافة خطوة جديدة.</div>';
+ $('#calendarTasks').innerHTML=tasks.length?tasks.map(t=>calendarTaskMarkup(t)).join(''):'<div class="empty">لا توجد مهام في هذا اليوم. يمكنك إضافة خطوة جديدة.</div>';
+ const moving=calendarMoveTaskId&&state.tasks.find(t=>t.id===calendarMoveTaskId);
+ const hint=$('#calendarMoveHint');if(hint){hint.hidden=!moving;hint.textContent=moving?`اختر تاريخًا جديدًا لنقل «${moving.name}» إليه، أو اسحبها إلى يوم آخر.`:''}
+ $('#calendarGrid').classList.toggle('move-mode',!!moving);
 }
 function renderFocus(){
  $('#focusCompleted').textContent=state.focusSessions||0;
@@ -503,7 +525,13 @@ $('#logoutButton')?.addEventListener('click',()=>{if(!confirm('هل تريد ت�
 $('#calendarPrev')?.addEventListener('click',()=>{calendarMonthDate=new Date(calendarMonthDate.getFullYear(),calendarMonthDate.getMonth()-1,1);renderCalendar()});
 $('#calendarNext')?.addEventListener('click',()=>{calendarMonthDate=new Date(calendarMonthDate.getFullYear(),calendarMonthDate.getMonth()+1,1);renderCalendar()});
 $('#calendarToday')?.addEventListener('click',()=>{calendarSelected=today();calendarMonthDate=new Date();renderCalendar()});
-$('#calendarGrid')?.addEventListener('click',e=>{const b=e.target.closest('[data-calendar-date]');if(!b)return;calendarSelected=b.dataset.calendarDate;calendarMonthDate=new Date(calendarSelected+'T12:00:00');renderCalendar()});
+$('#calendarGrid')?.addEventListener('click',e=>{const b=e.target.closest('[data-calendar-date]');if(!b)return;if(calendarMoveTaskId){moveCalendarTask(calendarMoveTaskId,b.dataset.calendarDate);return}calendarSelected=b.dataset.calendarDate;calendarMonthDate=new Date(calendarSelected+'T12:00:00');renderCalendar()});
+// Pointer-based drag/drop works with a mouse and with touch on phones. The explicit Move button is an accessible fallback.
+$('#calendarTasks')?.addEventListener('click',e=>{const mv=e.target.closest('[data-calendar-move]');if(mv){calendarMoveTaskId=calendarMoveTaskId===mv.dataset.calendarMove?null:mv.dataset.calendarMove;renderCalendar();if(calendarMoveTaskId)toast('اختر تاريخًا من التقويم لنقل المهمة');return}});
+$('#calendarTasks')?.addEventListener('pointerdown',e=>{const handle=e.target.closest('[data-calendar-drag]');if(!handle)return;const taskId=handle.dataset.calendarDrag;calendarPointerDrag={taskId,startX:e.clientX,startY:e.clientY,moved:false,pointerId:e.pointerId};try{handle.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault()});
+$('#calendarTasks')?.addEventListener('pointermove',e=>{if(!calendarPointerDrag||calendarPointerDrag.pointerId!==e.pointerId)return;const dx=e.clientX-calendarPointerDrag.startX,dy=e.clientY-calendarPointerDrag.startY;if(Math.abs(dx)+Math.abs(dy)>7)calendarPointerDrag.moved=true;if(!calendarPointerDrag.moved)return;const target=calendarDropTargetAt(e.clientX,e.clientY);$$('#calendarGrid [data-calendar-date]').forEach(d=>d.classList.toggle('drop-target',!!target&&d===target));});
+function finishCalendarPointerDrag(e){if(!calendarPointerDrag||calendarPointerDrag.pointerId!==e.pointerId)return;const drag=calendarPointerDrag;calendarPointerDrag=null;$$('#calendarGrid .drop-target').forEach(d=>d.classList.remove('drop-target'));if(drag.moved){const target=calendarDropTargetAt(e.clientX,e.clientY);if(target){moveCalendarTask(drag.taskId,target.dataset.calendarDate)}else{toast('اسحب المهمة إلى أحد أيام التقويم لنقلها')}}}
+$('#calendarTasks')?.addEventListener('pointerup',finishCalendarPointerDrag);$('#calendarTasks')?.addEventListener('pointercancel',()=>{calendarPointerDrag=null;$$('#calendarGrid .drop-target').forEach(d=>d.classList.remove('drop-target'))});
 $('#calendarAddTask')?.addEventListener('click',()=>{openModal('مهمة جديدة','ستُضاف المهمة إلى '+dateLabel(calendarSelected),field('calendarTaskName','اسم المهمة','ماذا تريد أن تنجز؟')+`<label class="muted" style="display:block;margin:8px 0 6px">الأولوية</label><select class="field" id="calendarTaskPriority"><option value="high">مهمة</option><option value="med" selected>متوسطة</option><option value="low">منخفضة</option></select>`,()=>{const name=$('#calendarTaskName').value.trim();if(!name)return toast('اكتب اسم المهمة أولاً');state.tasks.unshift({id:uid('t'),name,priority:$('#calendarTaskPriority').value,due:calendarSelected,created:Date.now(),done:false});save();render();renderCalendar();closeModal();toast('أُضيفت المهمة إلى التقويم')})});
 $('#focusStart')?.addEventListener('click',()=>{
  if(focusRunning){clearInterval(focusInterval);focusInterval=null;focusRunning=false;updateFocusClock();return}
@@ -517,6 +545,42 @@ $('#journalDate').textContent=new Date().toLocaleDateString('ar-JO');bootMonjez(
 })();
 </script></body></html>
 
+
+<style id="monjez-calendar-dragdrop-reference-style">
+/* Minimal white cards, soft grey surfaces and periwinkle blue inspired by the supplied reference. */
+#view-calendar .calendar-card,#view-calendar .card,#view-focus .card{background:#fff;border-color:#eceef2;box-shadow:0 8px 28px #17243b08;color:#111827}
+#view-calendar .calendar-toolbar strong{font-size:18px;color:#111827}
+#view-calendar .calendar-day{position:relative;background:#fff;border-color:#eceef2;border-radius:14px;min-height:70px;color:#111827;transition:background .15s,border-color .15s,transform .15s;touch-action:manipulation}
+#view-calendar .calendar-day i{background:#edf1ff;color:#647fd3;border-radius:99px;padding:2px 6px;font-weight:700}
+#view-calendar .calendar-day.selected{background:#edf1ff;border-color:#aabdf5;color:#263e80;box-shadow:inset 0 0 0 1px #aabdf5}
+#view-calendar .calendar-day.selected i{background:#a9bcf3;color:#233b7b}
+#view-calendar .calendar-day.is-today{box-shadow:inset 0 0 0 2px #a8bdf5}
+#view-calendar .calendar-day.drop-target{background:#dce6ff!important;border:2px dashed #718fe8!important;transform:scale(1.025);color:#203a80}
+#view-calendar .calendar-grid.move-mode [data-calendar-date]{cursor:copy}
+.calendar-move-hint{margin-top:12px;border-radius:12px;background:#edf3ff;border:1px solid #dbe5ff;color:#405ca5;padding:11px 13px;font-size:12px;line-height:1.7}
+.calendar-move-hint[hidden]{display:none}
+#calendarTasks{gap:9px}
+.calendar-task{display:flex;align-items:center;gap:9px;min-width:0;border:1px solid #eceef2;background:#fff;border-radius:15px;padding:10px 11px;transition:border-color .15s,box-shadow .15s,opacity .15s}
+.calendar-task.is-done .calendar-task-copy b{text-decoration:line-through;color:#9ca3af}
+.calendar-task-copy{flex:1;min-width:0}
+.calendar-task-copy b{display:block;font-size:13px;color:#111827;overflow-wrap:anywhere}
+.calendar-task-copy small{display:block;color:#8a93a2;font-size:10px;margin-top:4px}
+.calendar-drag-handle{width:33px;height:38px;flex:0 0 33px;border:0;border-radius:10px;background:#f2f4f8;color:#7d8798;font-size:22px;line-height:1;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.calendar-drag-handle:active{cursor:grabbing;background:#e3eaff;color:#5875cb}
+.calendar-task-check{width:25px;height:25px;flex:0 0 25px;border:1px solid #dce2ed;border-radius:8px;background:#fff;color:#fff;font-size:13px}
+.calendar-task.is-done .calendar-task-check{background:#819be9;border-color:#819be9}
+.calendar-move-button{border:1px solid #dce5ff;border-radius:10px;background:#f0f4ff;color:#4f6dc2;padding:8px 10px;font-size:11px;white-space:nowrap}
+.calendar-move-button.selected{background:#a9bdf5;border-color:#a9bdf5;color:#172b61;font-weight:700}
+.calendar-task.dragging{opacity:.45}
+#view-focus .focus-panel{background:#fff;color:#111827;border:1px solid #eceef2;box-shadow:0 8px 28px #17243b08}
+#view-focus .focus-panel .eyebrow{color:#71809a}
+#view-focus .focus-panel p{color:#6b7280}
+#view-focus .focus-presets .btn-secondary{background:#f7f8fb;color:#5b6474;border-color:#e8ebf1}
+#view-focus .focus-presets .btn-secondary.active{background:#dfe7ff;color:#304b9c;border-color:#b9c9fb}
+#view-focus .focus-actions .btn-secondary{background:#fff;color:#46536c;border-color:#dce2ed}
+#view-focus .btn-primary{background:#a9bdf5;color:#172b61}
+@media(max-width:700px){#view-calendar .calendar-card{padding:12px}#view-calendar .calendar-day{min-height:48px;border-radius:10px;font-size:12px}.calendar-task{padding:8px;gap:7px}.calendar-task-copy b{font-size:12px}.calendar-move-button{padding:8px 9px}.calendar-drag-handle{width:30px;flex-basis:30px;height:38px}#view-focus .focus-panel{min-height:290px;padding:24px 14px}}
+</style>
 <style id="monjez-onboarding-scroll-fix">
 /* Mobile onboarding: let the whole panel scroll naturally and keep navigation reachable. */
 @media(max-width:600px){
