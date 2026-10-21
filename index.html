@@ -278,6 +278,75 @@ body{background:#f5f6f8;color:#17191d;font-family:'IBM Plex Sans Arabic',system-
 @media(max-width:650px){.shell{grid-template-columns:minmax(0,1fr)}.sidebar{background:#fff;border-top:1px solid #e9ebef;border-left:0}.main{padding:18px 14px 90px}.hero{padding:20px 16px;border-radius:22px}.hero-progress{grid-template-columns:100px minmax(0,1fr);gap:12px}.ring{width:100px;height:100px}.ring-in strong{font-size:23px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.health-summary-card{padding:13px;gap:9px}.health-ring-small{width:56px;height:56px}.health-summary-icon{flex-basis:40px;height:40px;font-size:22px}.health-summary-top{flex-direction:row;align-items:center}.health-summary-bottom{flex-wrap:wrap}.health-detail-ring-row{gap:12px}.health-ring-large{width:96px;height:96px}.health-ring-large strong{font-size:22px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
+
+<style id="monjez-health-layout-auth-purple-v2">
+/* Health cards: centered completion ring first, readable metrics and controls below. */
+.health-detail-card{overflow:hidden}
+.health-detail-ring-row{display:grid!important;grid-template-columns:minmax(0,1fr)!important;justify-items:center;align-items:center;gap:0!important;margin:24px 0 12px!important;text-align:center}
+.health-detail-ring-row>.health-ring-large{grid-column:1!important;grid-row:1!important;width:136px;height:136px;margin:0 auto 20px!important}
+.health-detail-ring-row>.health-ring-large:before{inset:9px}
+.health-detail-ring-row>.health-ring-large strong{font-size:29px;white-space:nowrap}
+.health-detail-ring-row>.health-ring-large span{font-size:11px}
+.health-detail-ring-row>.health-detail-number{grid-column:1!important;grid-row:2!important;width:100%;display:flex!important;justify-content:center;align-items:baseline;flex-wrap:wrap;gap:7px 9px!important;margin:0 0 14px!important;text-align:center}
+.health-detail-ring-row>.health-detail-number strong{font-size:clamp(34px,8vw,46px);line-height:1.15;white-space:nowrap;overflow-wrap:normal}
+.health-detail-ring-row>.health-detail-number>span{font-size:16px;color:var(--muted)}
+.health-detail-ring-row>.health-detail-number small{flex-basis:100%!important;margin:0!important;font-size:13px;color:var(--muted)}
+.health-detail-ring-row>.health-progress{grid-column:1!important;grid-row:3!important;width:100%;margin:0!important;height:10px;border-radius:99px}
+.health-detail-ring-row>.health-percent{grid-column:1!important;grid-row:4!important;width:100%;text-align:center;margin:9px 0 0!important;font-size:13px}
+.health-detail-ring-row>.water-cup-row{grid-column:1!important;grid-row:5!important;width:100%;margin:20px 0 24px!important}
+.health-detail-ring-row>.health-section-label{grid-column:1!important;grid-row:6!important;width:100%;text-align:right;margin:8px 0 10px!important}
+.health-detail-ring-row>.water-quick-add{grid-column:1!important;grid-row:7!important;width:100%}
+.health-detail-ring-row>.health-custom-add{grid-column:1!important;grid-row:8!important;width:100%;margin-top:12px!important;display:flex;flex-wrap:wrap;gap:9px}
+.health-detail-ring-row>.health-custom-add .field{flex:1 1 100%;min-width:0}
+.health-detail-ring-row>.health-custom-add button{flex:1 1 0;min-width:0}
+.health-detail-ring-row>.calorie-remaining{grid-column:1!important;grid-row:5!important;width:100%;margin:16px 0!important;text-align:right}
+.health-detail-ring-row>label.health-section-label{grid-row:6!important}
+.health-detail-ring-row>p{grid-column:1!important;width:100%;text-align:right;line-height:1.8;margin-top:12px}
+.water-detail .health-detail-title>span{background:#F0E8FF;color:#5B21B6}
+.calorie-detail .health-detail-title>span{background:#F0E8FF;color:#5B21B6}
+.health-detail-heading h2{color:#4C1D95!important}.health-kicker{color:#7C3AED!important}
+.water-ring{background:conic-gradient(#8B5CF6 var(--ring-pct),#EDE9FE 0)!important}
+.calorie-ring{background:conic-gradient(#A78BFA var(--ring-pct),#EDE9FE 0)!important}
+.health-progress i,.gold-progress i{background:linear-gradient(90deg,#C4B5FD,#7C3AED)!important}
+.water-quick-add button{background:#F5F3FF!important;border-color:#DDD6FE!important;color:#4C1D95!important}
+.health-detail-card .btn-primary{background:#7C3AED!important;color:#fff!important}
+/* Purple MUNJIZ activation screen: remove the legacy green/gold interior treatment. */
+.auth-gate{background:radial-gradient(ellipse at 50% 0%,#EDE4FF 0%,transparent 42%),linear-gradient(145deg,#F8F7FC 0%,#F3EEFF 54%,#FFFFFF 100%)!important}
+.auth-gate:before{display:block!important;background:radial-gradient(circle at 8% 14%,#C4B5FD45 0,transparent 32%),radial-gradient(circle at 95% 80%,#A78BFA25 0,transparent 30%)!important;backdrop-filter:none!important}
+.auth-panel{background:#FFFFFF!important;border:1px solid #E9DFFF!important;box-shadow:0 24px 80px #4C1D9517!important}
+.auth-panel:before{height:55%!important;background:radial-gradient(ellipse at 50% 15%,#EDE4FF 0%,#F7F3FF 55%,#FFFFFF 100%)!important;border-radius:0 0 48% 48%/0 0 10% 10%!important}
+.auth-panel:after{border-color:#C4B5FD55!important;box-shadow:-16px 0 0 -15px #A78BFA33,-32px 0 0 -31px #A78BFA22!important}
+.auth-brand{background:transparent!important}
+.auth-mark{width:min(210px,68%)!important;height:auto!important;max-height:160px!important;max-width:68%!important;object-fit:contain!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+.auth-brand h1,#authActivation h2,#authProfile h2,.auth-panel h2{color:#32105C!important}
+.auth-brand p,.auth-copy{color:#6D28D9!important}
+#authActivation,#authProfile{background:rgba(255,255,255,.97)!important;border-color:#E9DFFF!important;box-shadow:0 -5px 28px #4C1D9508!important}
+.auth-field span{color:#4C1D95!important}
+.auth-field input,.auth-field select{background:#FCFAFF!important;border-color:#E5D9FF!important;color:#32105C!important}
+.auth-field input:focus,.auth-field select:focus{border-color:#8B5CF6!important;box-shadow:0 0 0 4px #8B5CF620!important}
+.auth-submit{background:linear-gradient(110deg,#7C3AED,#5B21B6)!important;color:#FFFFFF!important;box-shadow:0 8px 22px #6D28D922!important}
+.auth-submit:hover{background:linear-gradient(110deg,#8B5CF6,#6D28D9)!important}
+.auth-foot{background:#fff!important;color:#8B8498!important}
+.auth-country-note{background:#F5F3FF!important;color:#6D28D9!important}
+.onboard-progress i{background:linear-gradient(90deg,#C4B5FD,#7C3AED)!important}
+.onboard-symbol{background:#F0E8FF!important;color:#5B21B6!important}
+.starter-habit:has(input:checked){border-color:#A78BFA!important;background:#F5F3FF!important}
+.starter-habit input{accent-color:#7C3AED!important}
+@media(max-width:650px){
+ .health-detail-card{padding:20px 17px!important}
+ .health-detail-ring-row>.health-ring-large{width:128px;height:128px;margin-bottom:17px!important}
+ .health-detail-ring-row>.health-detail-number strong{font-size:38px}
+ .health-detail-ring-row>.health-custom-add{flex-wrap:wrap!important}
+ .health-detail-ring-row>.health-custom-add .field{flex-basis:100%!important}
+ .health-detail-ring-row>.health-custom-add button{flex:1 1 0!important}
+ .auth-panel{background:#fff!important}
+ .auth-panel:before{height:54%!important;background:radial-gradient(ellipse at 50% 15%,#EDE4FF 0%,#F7F3FF 60%,#FFFFFF 100%)!important}
+ .auth-brand{flex-basis:48%!important;min-height:270px!important;padding:calc(22px + env(safe-area-inset-top)) 20px 42px!important;gap:12px!important}
+ .auth-mark{width:min(205px,65%)!important;height:auto!important;max-height:145px!important;max-width:65%!important}
+ #authActivation,#authProfile{margin:-25px 0 0!important;padding:25px 22px 20px!important}
+}
+</style>
+
 </head>
 <body class="auth-locked"><div id="loadingScreen" class="loading-screen show" aria-live="polite" aria-hidden="false"><div class="loading-card"><img class="loading-wordmark" src="/assets/monjez-wordmark-transparent.png" alt="شعار منجز"><p class="loading-message">نرتّب يومك، ونقترب من أهدافك</p><div class="loading-track"><i></i></div><div class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></div></div></div><div id="authGate" class="auth-gate"><div class="auth-panel"><div class="auth-brand"><img class="auth-mark" src="/assets/monjez-wordmark-transparent.png" alt="شعار منجز"><div class="auth-brand-copy"><h1>رتّب يومك،<br>واقترب من أهدافك</h1><p>حياة أكثر توازنًا · كل يوم</p></div></div><div id="authActivation"><h2>ابدأ يومك بخطوة</h2><p class="auth-copy">أدخل مفتاح التفعيل للمتابعة إلى مساحتك الشخصية.</p><form id="activationForm"><label class="auth-field"><span>مفتاح التفعيل</span><input id="activationKey" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="MNJ-XXXX-XXXX-XXXX-XXXX" required></label><button class="auth-submit" id="activationSubmit" type="submit">متابعة</button></form></div><div id="authProfile" hidden><div class="onboard-progress"><i id="onboardProgressBar"></i></div><div class="onboard-step-label" id="onboardStepLabel">الخطوة ١ من ٥</div><form id="profileForm" novalidate>
 <div class="onboard-step" data-onboard-step="0"><div class="onboard-symbol">✦</div><h2>ما الاسم الذي نناديك به؟</h2><p class="auth-copy">لنبدأ مساحتك الشخصية باسم تحب أن تراه كل يوم.</p><label class="auth-field"><span>اسمك</span><input id="profileFullName" autocomplete="name" maxlength="80" placeholder="اكتب اسمك هنا" required></label></div>
